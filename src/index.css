@@ -1,0 +1,108 @@
+body {
+  font: 14px "Century Gothic", Futura, sans-serif;
+  margin: 20px;
+}
+
+.game {
+  display: flex;
+  flex-direction: row;
+}
+
+.leftPanel {
+  display: flex;
+  flex-direction: column;
+  margin: 20px;
+}
+
+.buttonsPanel {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-template-rows: auto auto;
+  grid-gap: 15px;
+  justify-content: center;
+}
+
+.colorBtn {
+  height: 40px;
+  width: 40px;
+  border: none;
+  cursor: pointer;
+}
+
+.colorBtn:hover {
+  outline: none;
+  border: 2px solid black;
+}
+
+.subPanel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 40px;
+  font-size: 20px;
+  color: darkblue;
+}
+
+.turnsLab {
+  text-transform: uppercase;
+}
+
+.capturadasLab {
+  margin-top: 10px;
+  text-transform: uppercase;
+}
+
+.capturadasNum {
+  margin-top: 10px;
+}
+
+.turnsNum {
+  margin-top: 10px;
+}
+
+.historyLab {
+    margin-top: 10px;
+    text-align: center;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.historyTab {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-template-rows: auto auto;
+    grid-gap: 15px;
+    justify-content: center;
+}
+
+.board {
+  margin: 20px;
+  display: grid;
+  grid-template-columns: repeat(14, 40px);
+  grid-template-rows: repeat(14, 40px);
+}
+
+.modal {
+    margin:15px;
+    z-index: 1;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.25);
+}
+
+.modal_content {
+    background-color: white;
+    display: 100px;
+    position: absolute;
+    margin-top: 20px;
+    font-size: 40px;
+    text-align: center;
+    text-transform: uppercase;
+    color: red;
+    font-family: 'Franklin Gothic';
+    margin-bottom: 3px;
+}
+
+.origin {
+  border : 2px solid black; 
+}
