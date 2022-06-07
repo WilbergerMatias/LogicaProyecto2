@@ -159,19 +159,62 @@ color(Grid, [X,Y], C):-
 
 
 
-ayuda(Grilla, Colores, [PosX,PosY], ColPrincipal, Profundidad, MejorSolucion, Capturadas):-
-    length(Grid, L),
+
+%!
+% Predicado principal de la ayuda, toma +Grilla, +Colores, [+PosX,
+% +PosY], +ColPrincipal, +Profundidad, -MejorSolcion, -Capturadas.
+% +Grilla: es la grilla actual del juego, necesaria para poder realizar
+% flicks
+% +ColPrincipal: color de la celda principal.
+% [+PosX, +PosY]: lista con la posicion de la celda en la grilla.
+% +Colores: lista de los colores del juego, utilizado al realizar
+% flicks.
+% +Profundidad: cantidad de movidas a realizar.
+% -MejorSolucion: lista con [Solucion, capturadas], donde solucion es la
+% secuencia de movidas que se encontro, y capturadas la cantidad de
+% celdas que logra capturar.
+ayuda(Grilla, Colores, [PosX,PosY], ColPrincipal, Profundidad, MejorSolucion):-
+    length(Grilla, L),
     Total is L*L,
     assert(celdas(Total)),
     findall(
         [Solucion, CantCapturadas],
         greedSearch(Grilla, Colores, [PosX,PosY], ColPrincipal, Profundidad, Solucion, CantCapturadas),
-        Res),
-
-    %%FALTA COMPARAR SOLUCIONES ENCONTRADAS, SI HAY SOLUCION QUE TERMINA JUEGO AGARRAR LA MAS CORTA, SI NO, DEVOLVER LA QUE MAS CAPTURA. ESTO SE PUEDE HACER CON UN FINDALL PARA VER QUE SOLUCIONES COMPLETAN EL JUEGO.
+        Soluciones),
+    findall(
+        [SolucionTermina, Total],
+        member([SolucionTermina, Total], Soluciones),
+        Terminan),
+    filtrarSolucionMayorCapt(Soluciones, MasCapt),
+    filtrarSolucionesTerminanCortas(Terminan, MejorTermina),
+    encontrarSolucion(MasCapt,MejorTermina, MejorSolucion),
     retract(celdas(_)).
 
+%!
+% Predicado encargado de encontrar entre las soluciones que se tienen,
+% cual es la que mas celdas captura. (util en caso de que ninguna
+% jugada encontrada, termine el juego).
+filtrarSolucionMayorCapt([], [[], 0]).
+filtrarSolucionMayorCapt([[Jugada, Capturadas]|RestoSoluciones],[MejJugada,MasCapt]):-
+    encontrarMejor(RestoSoluciones, Jugada, Capturadas, [MejJugada, MasCapt]).
 
+
+%!
+% Este predicado se encarga de comparar las jugadas y mantere cual es la
+% mejor hasta el momento.
+encontrarMejor([], Jugada, Capturadas, [Jugada, Capturadas]).
+
+encontrarMejor([[Jugada, Capturadas]|RestoSoluciones], _MejJugActual, MasCaptAct,  [MejJugada,MasCapt]):-
+    Capturadas>=MasCaptAct,
+    encontrarMejor(RestoSoluciones, Jugada, Capturadas, [MejJugada, MasCapt]).
+
+encontrarMejor([[_Jugada, _Capturadas]|RestoSoluciones], MejJugActual, MasCaptAct,  [MejJugada,MasCapt]):-
+     encontrarMejor(RestoSoluciones, MejJugActual, MasCaptAct, [MejJugada, MasCapt]).
+
+%!
+% Este predicado se encarga de realizar una busqueda exhaustiva para
+% lograr encontrar aquellas secuencias de movidas que se pueden realizar
+% en la profundidad, ignorando aquellas jugadas triviales.
 greedSearch(Grilla, Colores, Start, ColPrincipal, 0, [], 0):-!.
 
 greedSearch(Grilla, Colores, [PosX,PosY], Color, 1, [NCol], TotalCapturadas):-
@@ -189,6 +232,10 @@ greedSearch(Grilla, Colores, [PosX,PosY], Color, Profundidad, [NCol|Sol], TotalC
     controlFinJuego(FGrid, Colores, [PosX,PosY], Color, NCol, CantCapturadas, ProfMenor, Sol,TotalCapturadas).
 
 
+%!
+% Este predicado se encarga de verificar que una jugada, termine el
+% juego. En caso de que eso suceda, no es necesario seguir buscando para
+% dicha jugada, aun si no se llego a la profundidad dada.
 controlFinJuego(_, _, _, _,_, Total, _, _, Total):-
     celdas(Total),!.
 
