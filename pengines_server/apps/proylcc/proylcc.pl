@@ -190,6 +190,10 @@ ayuda(Grilla, Colores, [PosX,PosY], ColPrincipal, Profundidad, MejorSolucion):-
     encontrarSolucion(MasCapt,MejorTermina, MejorSolucion),
     retract(celdas(_)).
 
+encontrarSolucion(Sol1,[],Sol1).
+
+encontrarSolucion(_, SolTermina, SolTermina).
+
 %!
 % Predicado encargado de encontrar entre las soluciones que se tienen,
 % cual es la que mas celdas captura. (util en caso de que ninguna
@@ -216,14 +220,23 @@ encontrarMejor([[_Jugada, _Capturadas]|RestoSoluciones], MejJugActual, MasCaptAc
 filtrarSolucionTerminanMasCorta([[Jugada, Capturadas]|RestoSoluciones], [MejJugada,MasCapt]):-
     encontrarMenor(RestoSoluciones, Jugada, Capturadas, [MejJugada, MasCapt]).
 
-encontrarMenor([], Jugada, Capturadas, [Jugada,Capturadas]).
+encontrarMenor([], Jugada, Total, [Jugada,Total]).
 
+encontrarMenor([[Jugada, Total]|RestoSoluciones], MejJugAct, Total, [MejJugada,Total]):-
+    length(Jugada, Largo),
+    length(MejJugAct, mejorLargo),
+    Largo<mejorLargo,
+    encontrarMenor(RestoSoluciones, Jugada, Total, [MejJugada, Total]).
+
+
+encontarMenor([[_Jugada, Total]|RestoSoluciones], MejJugAct, Total, [MejJugada,Total]):-
+    encontrarMenor(RestoSoluciones, MejJugAct, Total, [MejJugada, Total]).
 
 %!
 % Este predicado se encarga de realizar una busqueda exhaustiva para
 % lograr encontrar aquellas secuencias de movidas que se pueden realizar
 % en la profundidad, ignorando aquellas jugadas triviales.
-greedSearch(Grilla, Colores, Start, ColPrincipal, 0, [], 0):-!.
+greedSearch(_Grilla, _Colores, _Start, _ColPrincipal, 0, [], 0):-!.
 
 greedSearch(Grilla, Colores, [PosX,PosY], Color, 1, [NCol], TotalCapturadas):-
     NCol\=Color,
@@ -238,7 +251,7 @@ greedSearch(Grilla, Colores, [PosX,PosY], Color, Profundidad, [NCol|Sol], TotalC
     NCol\=Color,
     member(NCol, Colores),
     flick(Grilla, NCol, PosX, PosY,FGrid),
-    (calcularAdyacentes(FGrid,[PosX, PosY], Aux), length(Aux,CantCapturadas)),
+    (calcularAdyacentes(FGrid,[PosX, PosY], Aux), length(Aux, CantCapturadas)),
     controlFinJuego(FGrid, Colores, [PosX,PosY], Color, NCol, CantCapturadas, ProfMenor, Sol, TotalCapturadas).
 
 
