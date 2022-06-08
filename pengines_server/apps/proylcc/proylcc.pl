@@ -224,8 +224,8 @@ encontrarMenor([], Jugada, Total, [Jugada,Total]).
 
 encontrarMenor([[Jugada, Total]|RestoSoluciones], MejJugAct, Total, [MejJugada,Total]):-
     length(Jugada, Largo),
-    length(MejJugAct, mejorLargo),
-    Largo<mejorLargo,
+    length(MejJugAct, MejorLargo),
+    Largo<MejorLargo,
     encontrarMenor(RestoSoluciones, Jugada, Total, [MejJugada, Total]).
 
 
@@ -239,8 +239,8 @@ encontarMenor([[_Jugada, Total]|RestoSoluciones], MejJugAct, Total, [MejJugada,T
 greedSearch(_Grilla, _Colores, _Start, _ColPrincipal, 0, [], 0):-!.
 
 greedSearch(Grilla, Colores, [PosX,PosY], Color, 1, [NCol], TotalCapturadas):-
-    NCol\=Color,
     member(NCol, Colores),
+    NCol\=Color,
     flick(Grilla,NCol, PosX, PosY, FGrid),
     calcularAdyacentes(FGrid,[PosX, PosY], Aux),
     length(Aux, TotalCapturadas).
@@ -248,8 +248,8 @@ greedSearch(Grilla, Colores, [PosX,PosY], Color, 1, [NCol], TotalCapturadas):-
 greedSearch(Grilla, Colores, [PosX,PosY], Color, Profundidad, [NCol|Sol], TotalCapturadas):-
     ProfMenor is Profundidad - 1,
     ProfMenor > 0,
-    NCol\=Color,
     member(NCol, Colores),
+    NCol\=Color,
     flick(Grilla, NCol, PosX, PosY,FGrid),
     (calcularAdyacentes(FGrid,[PosX, PosY], Aux), length(Aux, CantCapturadas)),
     controlFinJuego(FGrid, Colores, [PosX,PosY], Color, NCol, CantCapturadas, ProfMenor, Sol, TotalCapturadas).
@@ -263,6 +263,6 @@ controlFinJuego(_, _, _, _,_, Total, _, _, Total):-
     celdas(Total),!.
 
 controlFinJuego(Gridmid, Colores, [PosX, PosY], _Color, NCol, CantCapt, ProfMenor, Sol, TotalCapturadas):-
-    TotalCapturadas is TotalCapturadasAux+CantCapt,
-    greedSearch(Gridmid, Colores, [PosX, PosY], NCol, ProfMenor, Sol, TotalCapturadasAux).
+    greedSearch(Gridmid, Colores, [PosX, PosY], NCol, ProfMenor, Sol, TotalCapturadasAux),
+    TotalCapturadas is TotalCapturadasAux+CantCapt.
 
