@@ -14,9 +14,9 @@
 % Retorna false si Color coincide con el color de la celda superior izquierda de la grilla.
 
 flick(Grid, Color, PosX, PosY, FGrid):-
-    color(Grid,[PosX,PosY],Elem),
+    color(Grid,[PosX, PosY],Elem),
     dif(Color,Elem),
-    calcularAdyacentes(Grid, [PosY, PosX], ListadeAdyacentes),
+    calcularAdyacentes(Grid, [PosX, PosY], ListadeAdyacentes),
     cambiarColorAdyacentes(Grid, ListadeAdyacentes, Color, FGrid).
 
 %!
@@ -31,11 +31,11 @@ cambiarColorAdyacentes(Grid, [], _Color, Grid).
 % Este predicado se encarga de cambiar el elemento en Grid,
 % en posicion X e Y por el elemento Color
 
-cambiarColorAdyacentes(Grid, [[PosY , PosX] | Ys], Color, PLista) :-
-    encontrarLista(Grid,PosY,Lista),
-    cambiarElemento(PosX, Lista, Color, ListaS),
-    cambiarElemento(PosY, Grid, ListaS, NuevaLista),
-    cambiarColorAdyacentes(NuevaLista, Ys, Color, PLista).
+cambiarColorAdyacentes(Grid, [[PosX , PosY] | Resto], Color, PLista) :-
+    encontrarLista(Grid,PosX,Lista),
+    cambiarElemento(PosY, Lista, Color, ListaS),
+    cambiarElemento(PosX, Grid, ListaS, NuevaLista),
+    cambiarColorAdyacentes(NuevaLista, Resto, Color, PLista).
 
 %!
 % encontrarLista([+Lista|Resto],+Y,-Rta)
@@ -186,7 +186,7 @@ ayuda(Grilla, Colores, [PosX,PosY], ColPrincipal, Profundidad, MejorSolucion):-
         member([SolucionTermina, Total], Soluciones),
         Terminan),
     filtrarSolucionMayorCapt(Soluciones, MasCapt),
-    filtrarSolucionesTerminanCortas(Terminan, MejorTermina),
+    filtrarSolucionTerminanMasCorta(Terminan, MejorTermina),
     encontrarSolucion(MasCapt,MejorTermina, MejorSolucion),
     retract(celdas(_)).
 
@@ -197,7 +197,6 @@ ayuda(Grilla, Colores, [PosX,PosY], ColPrincipal, Profundidad, MejorSolucion):-
 filtrarSolucionMayorCapt([], [[], 0]).
 filtrarSolucionMayorCapt([[Jugada, Capturadas]|RestoSoluciones],[MejJugada,MasCapt]):-
     encontrarMejor(RestoSoluciones, Jugada, Capturadas, [MejJugada, MasCapt]).
-
 
 %!
 % Este predicado se encarga de comparar las jugadas y mantere cual es la
@@ -210,6 +209,15 @@ encontrarMejor([[Jugada, Capturadas]|RestoSoluciones], _MejJugActual, MasCaptAct
 
 encontrarMejor([[_Jugada, _Capturadas]|RestoSoluciones], MejJugActual, MasCaptAct,  [MejJugada,MasCapt]):-
      encontrarMejor(RestoSoluciones, MejJugActual, MasCaptAct, [MejJugada, MasCapt]).
+
+%!
+% Este predicado se encarga de tomar, de las soluciones que terminan el
+% juego, la que tenga la menor secuencia de jugadas.
+filtrarSolucionTerminanMasCorta([[Jugada, Capturadas]|RestoSoluciones], [MejJugada,MasCapt]):-
+    encontrarMenor(RestoSoluciones, Jugada, Capturadas, [MejJugada, MasCapt]).
+
+encontrarMenor([], Jugada, Capturadas, [Jugada,Capturadas]).
+
 
 %!
 % Este predicado se encarga de realizar una busqueda exhaustiva para

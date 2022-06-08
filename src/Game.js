@@ -103,7 +103,7 @@ class Game extends React.Component {
         });
           //const principal = this.state.grid[this.state.PosX][this.state.PosY];
             const grid2 = JSON.stringify(this.state.grid).replaceAll('"', "");
-            const query2 = "adyacentes(" + grid2 + "," + color + "," + this.state.PosX + "," + this.state.PosY + ", [], Rta)";
+            const query2 = "calcularAdyacentes(" + grid2 + ", [" + this.state.PosX + "," + this.state.PosY + "], Rta)";
             this.pengine.query(query2, (success, response) => {
                 if (success) {
                     const Aux = response['Rta'];

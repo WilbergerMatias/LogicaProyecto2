@@ -12,8 +12,8 @@ class Board extends React.Component {
                             value={cell}
                             key={i + "." + j}
                             onClick={this.props.onOriginSelected && (() =>
-                                this.props.onOriginSelected(j,i))}
-                            className={this.props.origin[0] === j && this.props.origin[1] === i ? "origin" : undefined}
+                                this.props.onOriginSelected(i,j))}
+                            className={this.props.origin[0] === i && this.props.origin[1] === j ? "origin" : undefined}
                         />
                     )
                 )}
