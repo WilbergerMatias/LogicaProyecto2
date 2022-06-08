@@ -74,6 +74,9 @@ body {
     grid-template-rows: auto auto;
     grid-gap: 15px;
     justify-content: center;
+    overflow-y: scroll;
+    width: 200px;
+    max-height: 260px;
 }
 
 .board {

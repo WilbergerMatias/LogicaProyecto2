@@ -230,7 +230,7 @@ greedSearch(Grilla, Colores, [PosX,PosY], Color, 1, [NCol], TotalCapturadas):-
     member(NCol, Colores),
     flick(Grilla,NCol, PosX, PosY, FGrid),
     calcularAdyacentes(FGrid,[PosX, PosY], Aux),
-    TotalCapturadas is length(Aux).
+    length(Aux, TotalCapturadas).
 
 greedSearch(Grilla, Colores, [PosX,PosY], Color, Profundidad, [NCol|Sol], TotalCapturadas):-
     ProfMenor is Profundidad - 1,
@@ -238,7 +238,7 @@ greedSearch(Grilla, Colores, [PosX,PosY], Color, Profundidad, [NCol|Sol], TotalC
     NCol\=Color,
     member(NCol, Colores),
     flick(Grilla, NCol, PosX, PosY,FGrid),
-    (calcularAdyacentes(FGrid,[PosX, PosY], Aux), CantCapturadas is length(Aux)),
+    (calcularAdyacentes(FGrid,[PosX, PosY], Aux), length(Aux,CantCapturadas)),
     controlFinJuego(FGrid, Colores, [PosX,PosY], Color, NCol, CantCapturadas, ProfMenor, Sol, TotalCapturadas).
 
 
