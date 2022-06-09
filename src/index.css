@@ -52,6 +52,11 @@ body {
 .helpInput {
   margin-top: 5px;
   padding: 10px;
+  margin-bottom: 10px;
+}
+
+.profundidadCapturadasLab {
+  padding: 10px;
 }
 
 
@@ -94,6 +99,17 @@ body {
    text-align: center;
     text-transform: uppercase;
     margin-bottom: 5px;
+}
+
+.profundidadTab {
+  display: grid;
+    grid-template-columns: auto auto auto;
+    grid-template-rows: auto auto;
+    grid-gap: 15px;
+    justify-content: center;
+    overflow-y: scroll;
+    width: 200px;
+    max-height: 260px;
 }
 
 .historyTab {

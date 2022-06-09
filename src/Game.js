@@ -40,11 +40,13 @@ class Game extends React.Component {
       iniciado : false,
         capturadas: 0,
       movimiento: [],
+      ayuda: [],
       complete: false,  // true if game is complete, false otherwise
         waiting: false,
       seen: false
     };
     this.handleClick = this.handleClick.bind(this);
+    this.handleHelpClick = this.handleHelpClick.bind(this);
     this.onOriginSelected = this.onOriginSelected.bind(this);
     this.handlePengineCreate = this.handlePengineCreate.bind(this);
     this.pengine = new PengineClient(this.handlePengineCreate);
@@ -134,18 +136,38 @@ class Game extends React.Component {
 
   handleHelpClick() {
     
-    
+    if (this.state.complete || this.state.waiting) {
+      return;
+    }
 
     const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
     const colorPrincipal = this.state.grid[this.state.PosX][this.state.PosY];
     const colorH = "[r, v, p, g, b, y]";
-    const profundidad = document.getElementById("fprofundidad").value;
-    const queryHelp = "ayuda(" + gridS + "," + colorH + ", [" + this.state.PosX +","+ this.state.PosY+"], " +colorPrincipal+ ", "+profundidad+ ", Grid)";
-    console.log(queryHelp);
+    var profundidad = document.getElementById("fprofundidad").value;
+    
+    if (profundidad == "") {
+       profundidad = "0";
+    }
+    const queryHelp = "ayuda(" + gridS + "," + colorH + ", [" + this.state.PosX +","+ this.state.PosY+"], " +colorPrincipal+ ", "+profundidad+ ", MejorSolucion)";
+    
     this.setState({
       waiting: true,
     });
 
+    this.pengine.query(queryHelp, (success, response) => {
+      if (success) {
+        const aux2 = response['MejorSolucion'];
+        const solucion = aux2[0];
+        this.setState({
+          ayuda: solucion,
+        });
+        document.getElementById("profundidadCapturadasLab").innerHTML = " " + aux2[1];
+    }
+  });
+
+    this.setState({
+      waiting: false
+    });
 
   }
 
@@ -203,6 +225,18 @@ class Game extends React.Component {
               <div className="profundidadLab">Profundidad</div>
               <input type="number" id="fprofundidad" className="helpInput"></input>
             </div>
+            <div className="profundidadCapturadasLab">
+              Capturadas:
+              <label id="profundidadCapturadasLab"></label>
+            </div>
+            <div className="profundidadTab">
+                        {this.state.ayuda.map((color, mov) =>
+                        <button
+                            className="colorBtn"
+                            style={{ backgroundColor: colorToCss(color) }}
+                            key={mov}
+                        />)}
+                  </div>
           </div>
             {this.state.complete ? <PopUp texto={"Victoria!!! Logro completar el juego en un total de: " + this.state.turns + " flicks realizados."} /> : null}
       </div>
