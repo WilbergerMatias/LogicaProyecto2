@@ -96,7 +96,6 @@ class Game extends React.Component {
     this.setState({
       waiting: true,
       iniciado: true,
-      turns: this.state.turns + 1,
     });
     this.pengine.query(queryS, (success, response) => {
         if (success) {
@@ -129,7 +128,9 @@ class Game extends React.Component {
         });
         }
         this.state.movimiento.unshift(colorToCss(color)) // moviendo esta linea de lugar, se puede hacer que se actualice solamente si es valido el movimiento
-    });
+        this.state.turns = this.state.turns + 1;
+    
+      });
   }
 
   
