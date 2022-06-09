@@ -219,6 +219,9 @@ encontrarMejor([[_Jugada, Capturadas]|RestoSoluciones], MejJugActual, MasCaptAct
 %!
 % Este predicado se encarga de tomar, de las soluciones que terminan el
 % juego, la que tenga la menor secuencia de jugadas.
+
+filtrarSolucionTerminanMasCorta([], []).
+
 filtrarSolucionTerminanMasCorta([[Jugada, Capturadas]|RestoSoluciones], [MejJugada, Total]):-
     encontrarMenor(RestoSoluciones, Jugada, Capturadas, [MejJugada, Total]).
 

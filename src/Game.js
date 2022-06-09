@@ -93,13 +93,13 @@ class Game extends React.Component {
       const queryS = "flick(" + gridS + "," + color + "," + this.state.PosX +","+ this.state.PosY+", Grid)";
     this.setState({
       waiting: true,
-      iniciado: true
+      iniciado: true,
+      turns: this.state.turns + 1,
     });
     this.pengine.query(queryS, (success, response) => {
         if (success) {
         this.setState({
           grid: response['Grid'],
-            turns: this.state.turns + 1,
         });
           //const principal = this.state.grid[this.state.PosX][this.state.PosY];
             const grid2 = JSON.stringify(this.state.grid).replaceAll('"', "");
@@ -128,6 +128,25 @@ class Game extends React.Component {
         }
         this.state.movimiento.unshift(colorToCss(color)) // moviendo esta linea de lugar, se puede hacer que se actualice solamente si es valido el movimiento
     });
+  }
+
+  
+
+  handleHelpClick() {
+    
+    
+
+    const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
+    const colorPrincipal = this.state.grid[this.state.PosX][this.state.PosY];
+    const colorH = "[r, v, p, g, b, y]";
+    const profundidad = document.getElementById("fprofundidad").value;
+    const queryHelp = "ayuda(" + gridS + "," + colorH + ", [" + this.state.PosX +","+ this.state.PosY+"], " +colorPrincipal+ ", "+profundidad+ ", Grid)";
+    console.log(queryHelp);
+    this.setState({
+      waiting: true,
+    });
+
+
   }
 
   onOriginSelected(x, y) {
@@ -175,6 +194,16 @@ class Game extends React.Component {
               onOriginSelected = {!this.state.iniciado && !this.state.posX && !this.state.PosY ? this.onOriginSelected : undefined}
               origin= {[this.state.PosX, this.state.PosY]}
             />
+          <div className="rightPanel">
+            <button
+                  className="helpBtn"
+                  onClick={() => this.handleHelpClick()}
+                > Help </button>
+            <div className="profundidadPanel">
+              <div className="profundidadLab">Profundidad</div>
+              <input type="number" id="fprofundidad" className="helpInput"></input>
+            </div>
+          </div>
             {this.state.complete ? <PopUp texto={"Victoria!!! Logro completar el juego en un total de: " + this.state.turns + " flicks realizados."} /> : null}
       </div>
     );
