@@ -246,9 +246,11 @@ greedSearch(_Grilla, _Colores, _Start, _ColPrincipal, 0, [], 0):-!.
 greedSearch(Grilla, Colores, [PosX,PosY], Color, 1, [NCol], TotalCapturadas):-
     member(NCol, Colores),
     NCol\=Color,
+    (calcularAdyacentes(Grilla,[PosX, PosY], Aux), length(Aux, CantCapturadasAntes)),
     flick(Grilla,NCol, PosX, PosY, FGrid),
-    calcularAdyacentes(FGrid,[PosX, PosY], Aux),
-    length(Aux, TotalCapturadas).
+    (calcularAdyacentes(FGrid,[PosX, PosY], Aux2), length(Aux2, CantCapturadasNuevas)),
+    not(CantCapturadasAntes == CantCapturadasNuevas),
+    length(Aux2, TotalCapturadas).
 
 greedSearch(Grilla, Colores, [PosX,PosY], Color, Profundidad, [NCol|Sol], TotalCapturadas):-
     ProfMenor is Profundidad - 1,
@@ -257,7 +259,7 @@ greedSearch(Grilla, Colores, [PosX,PosY], Color, Profundidad, [NCol|Sol], TotalC
     NCol\=Color,
     (calcularAdyacentes(Grilla,[PosX, PosY], Aux), length(Aux, CantCapturadasAntes)),
     flick(Grilla, NCol, PosX, PosY,FGrid),
-    (calcularAdyacentes(FGrid,[PosX, PosY], Aux), length(Aux, CantCapturadasNuevas)),
+    (calcularAdyacentes(FGrid,[PosX, PosY], Aux2), length(Aux2, CantCapturadasNuevas)),
     not(CantCapturadasAntes == CantCapturadasNuevas),
     controlFinJuego(FGrid, Colores, [PosX,PosY], Color, NCol, CantCapturadasNuevas, ProfMenor, Sol, TotalCapturadas).
 
@@ -269,7 +271,6 @@ greedSearch(Grilla, Colores, [PosX,PosY], Color, Profundidad, [NCol|Sol], TotalC
 controlFinJuego(_, _, _, _,_, Total, _, _, Total):-
     celdas(Total),!.
 
-controlFinJuego(Gridmid, Colores, [PosX, PosY], _Color, NCol, CantCapt, ProfMenor, Sol, TotalCapturadas):-
-    greedSearch(Gridmid, Colores, [PosX, PosY], NCol, ProfMenor, Sol, TotalCapturadasAux),
-    TotalCapturadas is TotalCapturadasAux+CantCapt.
+controlFinJuego(Gridmid, Colores, [PosX, PosY], _Color, NCol, _CantCapt, ProfMenor, Sol, TotalCapturadas):-
+    greedSearch(Gridmid, Colores, [PosX, PosY], NCol, ProfMenor, Sol, TotalCapturadas).
 
