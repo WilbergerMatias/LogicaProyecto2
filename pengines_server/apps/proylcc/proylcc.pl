@@ -3,6 +3,7 @@
 		flick/5
 	]).
 
+:-dynamic celdas/1.
 %!
 %
 % Flick(+Grid, +Color, +PosX, +PosY, -FGrid) <- esto es si se guarda el estado en React
@@ -17,7 +18,7 @@ flick(Grid, Color, PosX, PosY, FGrid):-
     color(Grid,[PosX, PosY],Elem),
     dif(Color,Elem),
     calcularAdyacentes(Grid, [PosX, PosY], ListadeAdyacentes),
-    cambiarColorAdyacentes(Grid, ListadeAdyacentes, Color, FGrid).
+    cambiarColorAdyacentes(Grid, ListadeAdyacentes, Color, FGrid),!.
 
 %!
 % Caso base utilizado en el predicado de cambio de color
@@ -208,17 +209,18 @@ filtrarSolucionMayorCapt([[Jugada, Capturadas]|RestoSoluciones],[MejJugada,MasCa
 encontrarMejor([], Jugada, Capturadas, [Jugada, Capturadas]).
 
 encontrarMejor([[Jugada, Capturadas]|RestoSoluciones], _MejJugActual, MasCaptAct,  [MejJugada,MasCapt]):-
-    Capturadas>=MasCaptAct,
+    Capturadas>MasCaptAct,
     encontrarMejor(RestoSoluciones, Jugada, Capturadas, [MejJugada, MasCapt]).
 
-encontrarMejor([[_Jugada, _Capturadas]|RestoSoluciones], MejJugActual, MasCaptAct,  [MejJugada,MasCapt]):-
+encontrarMejor([[_Jugada, Capturadas]|RestoSoluciones], MejJugActual, MasCaptAct,  [MejJugada,MasCapt]):-
+     Capturadas=<MasCaptAct,
      encontrarMejor(RestoSoluciones, MejJugActual, MasCaptAct, [MejJugada, MasCapt]).
 
 %!
 % Este predicado se encarga de tomar, de las soluciones que terminan el
 % juego, la que tenga la menor secuencia de jugadas.
-filtrarSolucionTerminanMasCorta([[Jugada, Capturadas]|RestoSoluciones], [MejJugada,MasCapt]):-
-    encontrarMenor(RestoSoluciones, Jugada, Capturadas, [MejJugada, MasCapt]).
+filtrarSolucionTerminanMasCorta([[Jugada, Capturadas]|RestoSoluciones], [MejJugada, Total]):-
+    encontrarMenor(RestoSoluciones, Jugada, Capturadas, [MejJugada, Total]).
 
 encontrarMenor([], Jugada, Total, [Jugada,Total]).
 
@@ -229,7 +231,10 @@ encontrarMenor([[Jugada, Total]|RestoSoluciones], MejJugAct, Total, [MejJugada,T
     encontrarMenor(RestoSoluciones, Jugada, Total, [MejJugada, Total]).
 
 
-encontarMenor([[_Jugada, Total]|RestoSoluciones], MejJugAct, Total, [MejJugada,Total]):-
+encontarMenor([[Jugada, Total]|RestoSoluciones], MejJugAct, Total, [MejJugada,Total]):-
+    length(Jugada, Largo),
+    length(MejJugAct, MejorLargo),
+    Largo>=MejorLargo,
     encontrarMenor(RestoSoluciones, MejJugAct, Total, [MejJugada, Total]).
 
 %!
@@ -250,9 +255,11 @@ greedSearch(Grilla, Colores, [PosX,PosY], Color, Profundidad, [NCol|Sol], TotalC
     ProfMenor > 0,
     member(NCol, Colores),
     NCol\=Color,
+    (calcularAdyacentes(Grilla,[PosX, PosY], Aux), length(Aux, CantCapturadasAntes)),
     flick(Grilla, NCol, PosX, PosY,FGrid),
-    (calcularAdyacentes(FGrid,[PosX, PosY], Aux), length(Aux, CantCapturadas)),
-    controlFinJuego(FGrid, Colores, [PosX,PosY], Color, NCol, CantCapturadas, ProfMenor, Sol, TotalCapturadas).
+    (calcularAdyacentes(FGrid,[PosX, PosY], Aux), length(Aux, CantCapturadasNuevas)),
+    not(CantCapturadasAntes == CantCapturadasNuevas),
+    controlFinJuego(FGrid, Colores, [PosX,PosY], Color, NCol, CantCapturadasNuevas, ProfMenor, Sol, TotalCapturadas).
 
 
 %!
