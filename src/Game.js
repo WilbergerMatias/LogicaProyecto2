@@ -145,7 +145,7 @@ class Game extends React.Component {
     const colorPrincipal = this.state.grid[this.state.PosX][this.state.PosY];
     const colorH = "[r, v, p, g, b, y]";
     var profundidad = document.getElementById("fprofundidad").value;
-    
+  
     if (profundidad == "") {
        profundidad = "0";
     }
@@ -205,6 +205,7 @@ class Game extends React.Component {
                   <div className="historyTab">
                         {this.state.movimiento.map((color, mov) =>
                         <button
+                            id = "colorBtn"
                             className="colorBtn"
                             style={{ backgroundColor: colorToCss(color) }}
                             key={mov}

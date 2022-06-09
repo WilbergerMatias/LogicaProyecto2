@@ -271,7 +271,7 @@ greedSearch(Grilla, Colores, [PosX,PosY], Color, Profundidad, [NCol|Sol], TotalC
 % Este predicado se encarga de verificar que una jugada, termine el
 % juego. En caso de que eso suceda, no es necesario seguir buscando para
 % dicha jugada, aun si no se llego a la profundidad dada.
-controlFinJuego(_, _, _, _,_, Total, _, _, Total):-
+controlFinJuego(_, _, _, _,_, Total, _, [], Total):-
     celdas(Total),!.
 
 controlFinJuego(Gridmid, Colores, [PosX, PosY], _Color, NCol, _CantCapt, ProfMenor, Sol, TotalCapturadas):-
