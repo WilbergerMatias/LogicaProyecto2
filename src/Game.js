@@ -163,13 +163,11 @@ class Game extends React.Component {
           ayuda: solucion,
         });
         document.getElementById("profundidadCapturadasLab").innerHTML = " " + aux2[1];
-    }
+      }
+        this.setState({
+            waiting: false
+        });
   });
-
-    this.setState({
-      waiting: false
-    });
-
   }
 
   onOriginSelected(x, y) {
