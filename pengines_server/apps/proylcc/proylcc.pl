@@ -129,7 +129,7 @@ findAdyacentes(Grid, Pend, Visited, Adyacentes):-
     findAdyacentes(Grid, NPend, [P|Visited], Adyacentes).
 
 /*
- * adyC(+P, +Grid, -A)
+ * adyC(+Grid, +P, -A)
  */
 
 adyC(Grid, P, A):-
