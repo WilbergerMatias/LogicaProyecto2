@@ -136,7 +136,10 @@ class Game extends React.Component {
   
 
   handleHelpClick() {
-    
+    if (this.state.ayuda != null)
+        this.setState({
+            ayuda: [],
+        })
     if (this.state.complete || this.state.waiting) {
       return;
     }
@@ -154,7 +157,7 @@ class Game extends React.Component {
     this.setState({
       waiting: true,
     });
-
+      document.getElementById("profundidadEstadoBusqueda").innerHTML = "Estado: Buscando mejor solucion, por favor espere...";
     this.pengine.query(queryHelp, (success, response) => {
       if (success) {
         const aux2 = response['MejorSolucion'];
@@ -162,6 +165,7 @@ class Game extends React.Component {
         this.setState({
           ayuda: solucion,
         });
+        document.getElementById("profundidadEstadoBusqueda").innerHTML = "Solucion encontrada: ";
         document.getElementById("profundidadCapturadasLab").innerHTML = " " + aux2[1];
       }
         this.setState({
@@ -227,7 +231,9 @@ class Game extends React.Component {
             </div>
             <div className="profundidadCapturadasLab">
               Capturadas:
-              <label id="profundidadCapturadasLab"></label>
+            <label id="profundidadCapturadasLab"></label>
+              
+            <label id="profundidadEstadoBusqueda"></label>
             </div>
             <div className="profundidadTab">
                         {this.state.ayuda.map((color, mov) =>
