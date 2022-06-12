@@ -147,9 +147,15 @@ class Game extends React.Component {
     const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
     const colorPrincipal = this.state.grid[this.state.PosX][this.state.PosY];
     const colorH = "[r, v, p, g, b, y]";
-    var profundidad = document.getElementById("fprofundidad").value;
-  
-    if (profundidad == "") {
+      var profundidad = document.getElementById("fprofundidad").value;
+      document.getElementById("profundidadCapturadasLab").innerHTML = "";
+        
+    if (parseInt(profundidad, 10) < 0) {
+        document.getElementById("profundidadEstadoBusqueda").innerHTML = "SOLO SE ACEPTAN NUMEROS MAYORES O IGUALES A 0";
+        return;
+    }
+
+    if (profundidad === "") {
        profundidad = "0";
     }
     const queryHelp = "ayuda(" + gridS + "," + colorH + ", [" + this.state.PosX +","+ this.state.PosY+"], " +colorPrincipal+ ", "+profundidad+ ", MejorSolucion)";
