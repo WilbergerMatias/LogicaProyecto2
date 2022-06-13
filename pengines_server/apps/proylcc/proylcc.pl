@@ -218,6 +218,9 @@ ayuda(Grilla, Colores, [PosX,PosY], ColPrincipal, Profundidad, MejorSolucion):-
     % Se retracta el assert realizado al principio del predicado
     retract(celdas(_)), !.
 
+%!
+% Predicado encargado de devolver la solución buscada en el predicado ayuda/6.
+
 encontrarSolucion(Sol1,[],Sol1).
 
 encontrarSolucion(_, SolTermina, SolTermina).
@@ -251,6 +254,10 @@ filtrarSolucionTerminanMasCorta([], []).
 
 filtrarSolucionTerminanMasCorta([[Jugada, Capturadas]|RestoSoluciones], [MejJugada, Total]):-
     encontrarMenor(RestoSoluciones, Jugada, Capturadas, [MejJugada, Total]).
+
+%!
+% Este predicado se encarga de tomar, de las soluciones que terminan el
+% juego, la que tenga menor la menor secuencia de jugadas.
 
 encontrarMenor([], Jugada, Total, [Jugada,Total]).
 
