@@ -257,15 +257,16 @@ encontrarMenor([], Jugada, Total, [Jugada,Total]).
 encontrarMenor([[Jugada, Total]|RestoSoluciones], MejJugAct, Total, [MejJugada,Total]):-
     length(Jugada, Largo),
     length(MejJugAct, MejorLargo),
+    Largo>=MejorLargo,
+    encontrarMenor(RestoSoluciones, MejJugAct, Total, [MejJugada, Total]).
+
+
+encontrarMenor([[Jugada, Total]|RestoSoluciones], MejJugAct, Total, [MejJugada,Total]):-
+    length(Jugada, Largo),
+    length(MejJugAct, MejorLargo),
     Largo<MejorLargo,
     encontrarMenor(RestoSoluciones, Jugada, Total, [MejJugada, Total]).
 
-
-encontarMenor([[Jugada, Total]|RestoSoluciones], MejJugAct, Total, [MejJugada,Total]):-
-    length(Jugada, Largo),
-    length(MejJugAct, MejorLargo),
-    Largo>=MejorLargo,
-    encontrarMenor(RestoSoluciones, MejJugAct, Total, [MejJugada, Total]).
 
 %!
 % Este predicado se encarga de realizar una busqueda exhaustiva para
