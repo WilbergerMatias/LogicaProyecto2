@@ -99,7 +99,7 @@ compare([[X|Xy]|T],[Z|Zy]):-
 equal(X,X).
 
 %!
-% calcularAdyacentes(+Grid, +Start, -Adyacemtes)
+% calcularAdyacentes(+Grid, +Start, -Adyacentes)
 % Este predicado se encarga de buscar todas las celdas adyacentes a la
 % celda origen
 % Grid: la grilla actual del juego.
@@ -175,7 +175,7 @@ color(Grid, [X,Y], C):-
 
 %!
 % Predicado principal de la ayuda, toma +Grilla, +Colores, [+PosX,
-% +PosY], +ColPrincipal, +Profundidad, -MejorSolcion, -Capturadas.
+% +PosY], +ColPrincipal, +Profundidad, -MejorSolcion.
 % +Grilla: es la grilla actual del juego, necesaria para poder realizar
 % flicks
 % +ColPrincipal: color de la celda principal.
@@ -190,32 +190,32 @@ ayuda(Grilla, Colores, [PosX,PosY], ColPrincipal, Profundidad, MejorSolucion):-
     length(Grilla, L),
     Total is L*L,
 
-    %Se utiliza este assert para poder saber si una movida en especifico, completa el tablero, y termina el juego
+    % Se utiliza este assert para poder saber si una movida en especifico, completa el tablero, y termina el juego
     assert(celdas(Total)),
 
-    %Este findall encuentra todas las posibles soluciones en profundidad a nuestro tablero.
+    % Este findall encuentra todas las posibles soluciones en profundidad a nuestro tablero.
     findall(
         [Solucion, CantCapturadas],
         greedSearch(Grilla, Colores, [PosX,PosY], ColPrincipal, Profundidad, Solucion, CantCapturadas),
         Soluciones),
 
-    %Este findall separa de todas las soluciones, aquellas que terminen el juego.
+    % Este findall separa de todas las soluciones, aquellas que terminen el juego.
     findall(
         [SolucionTermina, Total],
         member([SolucionTermina, Total], Soluciones),
         Terminan),
 
-    %Se procede a filtrar de las soluciones, aquella que mas celdas capturan
+    % Se procede a filtrar de las soluciones, aquella que mas celdas capturan
     filtrarSolucionMayorCapt(Soluciones, MasCapt),
 
-    %Luego se obtiene la menor serie de movimientos que terminan el juego, si existe
+    % Luego se obtiene la menor serie de movimientos que terminan el juego, si existe
     filtrarSolucionTerminanMasCorta(Terminan, MejorTermina),
 
     % Se prepara para retornar la menor serie de movimientos que terminen el juego. Si esta no existe, se retorna aquella serie de
     % movimientos que mas celdas capturo en Profundidad.
     encontrarSolucion(MasCapt,MejorTermina, MejorSolucion),
 
-    %Se retracta el assert realizado al principio del predicado
+    % Se retracta el assert realizado al principio del predicado
     retract(celdas(_)), !.
 
 encontrarSolucion(Sol1,[],Sol1).
@@ -231,7 +231,7 @@ filtrarSolucionMayorCapt([[Jugada, Capturadas]|RestoSoluciones],[MejJugada,MasCa
     encontrarMejor(RestoSoluciones, Jugada, Capturadas, [MejJugada, MasCapt]).
 
 %!
-% Este predicado se encarga de comparar las jugadas y mantere cual es la
+% Este predicado se encarga de comparar las jugadas y mantener cual es la
 % mejor hasta el momento.
 encontrarMejor([], Jugada, Capturadas, [Jugada, Capturadas]).
 

@@ -172,7 +172,7 @@ class Game extends React.Component {
           ayuda: solucion,
         });
         document.getElementById("profundidadEstadoBusqueda").innerHTML = "Solucion encontrada: ";
-        document.getElementById("profundidadCapturadasLab").innerHTML = " " + aux2[1];
+        document.getElementById("profundidadCapturadasLab").innerHTML = aux2[1];
       }
         this.setState({
             waiting: false
